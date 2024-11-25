@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Produksi</title>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- My Style -->
+    <style>
+      :root {
+        --primary: #c58940;
+        --hover: #a06633;
+        --white: #fff;
+        --bg: #faeab1;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        text-decoration: none;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Ubuntu", sans-serif;
+        background-color: var(--bg);
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 1rem;
+        background: var(--primary);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar a {
+        color: var(--bg);
+        text-decoration: none;
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      .navbar a:hover {
+        background: var(--hover);
+        color: var(--white);
+        border-radius: 5px;
+      }
+
+      /* Atur margin konten agar tidak tertutup navbar */
+      .bahanBaku {
+        padding: 5rem 2rem 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      th {
+        background-color: var(--primary);
+        color: var(--white);
+      }
+
+      .form-container {
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      input {
+        margin-right: 5px;
+        padding: 5px;
+      }
+
+      .add-button,
+      .update-button,
+      .delete-button {
+        padding: 5px 10px;
+        background-color: var(--primary);
+        color: var(--white);
+        border: none;
+        cursor: pointer;
+      }
+
+      .update-button,
+      .delete-button {
+        margin-right: 5px;
+      }
+
+      .add-button:hover,
+      .update-button:hover,
+      .delete-button:hover {
+        background-color: var(--hover);
+      }
+
+      .resep {
+        padding: 5rem 2rem 2rem; /* Tambahkan padding di bagian atas untuk menghindari konten tertutup navbar */
+      }
+
+      @media (max-width: 1366px) {
+        html {
+          font-size: 75%;
+        }
+      }
+      @media (max-width: 758px) {
+        html {
+          font-size: 62.5%;
+        }
+      }
+      @media (max-width: 450px) {
+        html {
+          font-size: 55%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar Start -->
+    <nav class="navbar">
+      <a href="Beranda.html">Home</a>
+      <a href="bahanBaku.html">Bahan Baku</a>
+      <a href="Resep.html">Resep</a>
+      <a href="Produksi.html">Produksi</a>
+      <a href="stok.html">Stok</a>
+      <a href="Penjualan.html">Penjualan</a>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Konten Utama -->
+    <div class="resep">
+      <button class="add-button" onclick="showForm()">Tambah Data Baru</button>
+      <div class="form-container" id="form-container">
+        <input type="text" id="inputIdProduksi" placeholder="ID Produksi" />
+        <input type="text" id="inputIdResep" placeholder="ID Resep" />
+
+        <!-- Ganti input dengan select untuk memilih produk -->
+        <label for="inputProduk">Nama Produk: </label>
+        <select id="inputProduk">
+          <option value="Tahu Matang">Tahu Matang</option>
+          <option value="Tahu Mentah">Tahu Mentah</option>
+          <option value="Limbah">Limbah</option>
+        </select>
+
+        <input type="number" id="inputJumlah" placeholder="Jumlah" />
+        <button class="add-button" onclick="addNewData()">Simpan</button>
+      </div>
+
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th>ID Produksi</th>
+            <th>ID Resep</th>
+            <th>Nama Produk</th>
+            <th>Jumlah</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data Akan Diisi dengan JS -->
+        </tbody>
+      </table>
+    </div>
+  </body>
+  <script>
+    // Array untuk menyimpan data produksi
+    let produksi = [
+      {
+        idProduksi: "P001",
+        idResep: "R001",
+        produk: "Tahu Matang",
+        jumlah: 50,
+      },
+      {
+        idProduksi: "P002",
+        idResep: "R002",
+        produk: "Tahu Mentah",
+        jumlah: 30,
+      },
+    ];
+
+    // Fungsi untuk render tabel
+    function renderTable() {
+      const tableBody = document.querySelector("#data-table tbody");
+      tableBody.innerHTML = ""; // Bersihkan tabel
+      produksi.forEach((item, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+      <td>${item.idProduksi}</td>
+      <td>${item.idResep}</td>
+      <td>${item.produk}</td>
+      <td>${item.jumlah}</td>
+      <td>
+        <button class="update-button" onclick="showUpdateForm(${index})">Update</button>
+        <button class="delete-button" onclick="deleteData(${index})">Delete</button>
+      </td>
+    `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Fungsi untuk menampilkan form tambah data
+    function showForm() {
+      document.getElementById("form-container").style.display = "block";
+      clearForm();
+    }
+
+    // Fungsi untuk menyimpan data baru
+    function addNewData() {
+      const idProduksi = document.getElementById("inputIdProduksi").value;
+      const idResep = document.getElementById("inputIdResep").value;
+      const produk = document.getElementById("inputProduk").value;
+      const jumlah = document.getElementById("inputJumlah").value;
+
+      // Validasi input
+      if (idProduksi && idResep && produk && jumlah) {
+        produksi.push({ idProduksi, idResep, produk, jumlah });
+        renderTable();
+        clearForm();
+        document.getElementById("form-container").style.display = "none";
+      } else {
+        alert("Semua kolom harus diisi!");
+      }
+    }
+
+    // Fungsi untuk menampilkan form update data
+    function showUpdateForm(index) {
+      const data = produksi[index];
+      document.getElementById("inputIdProduksi").value = data.idProduksi;
+      document.getElementById("inputIdResep").value = data.idResep;
+      document.getElementById("inputProduk").value = data.produk;
+      document.getElementById("inputJumlah").value = data.jumlah;
+
+      const saveButton = document.querySelector(".add-button");
+      saveButton.onclick = function () {
+        updateData(index);
+      };
+      document.getElementById("form-container").style.display = "block";
+    }
+
+    // Fungsi untuk memperbarui data
+    function updateData(index) {
+      produksi[index] = {
+        idProduksi: document.getElementById("inputIdProduksi").value,
+        idResep: document.getElementById("inputIdResep").value,
+        produk: document.getElementById("inputProduk").value,
+        jumlah: document.getElementById("inputJumlah").value,
+      };
+      renderTable();
+      clearForm();
+      document.getElementById("form-container").style.display = "none"; // Sembunyikan form setelah update
+    }
+
+    // Fungsi untuk menghapus data
+    function deleteData(index) {
+      produksi.splice(index, 1);
+      renderTable();
+    }
+
+    // Fungsi untuk membersihkan form input
+    function clearForm() {
+      document.getElementById("inputIdProduksi").value = "";
+      document.getElementById("inputIdResep").value = "";
+      document.getElementById("inputProduk").value = "";
+      document.getElementById("inputJumlah").value = "";
+    }
+
+    // Render tabel awal
+    renderTable();
+  </script>
+</html>

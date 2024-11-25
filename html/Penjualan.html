@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penjualan</title>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+      :root {
+        --primary: #c58940;
+        --hover: #a06633;
+        --white: #fff;
+        --bg: #faeab1;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        text-decoration: none;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Ubuntu", sans-serif;
+        background-color: var(--bg);
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 1rem;
+        background: var(--primary);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar a {
+        color: var(--bg);
+        text-decoration: none;
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      .navbar a:hover {
+        background: var(--hover);
+        color: var(--white);
+        border-radius: 5px;
+      }
+
+      /* Atur margin konten agar tidak tertutup navbar */
+      .bahanBaku {
+        padding: 5rem 2rem 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      th {
+        background-color: var(--primary);
+        color: var(--white);
+      }
+
+      .form-container {
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      input {
+        margin-right: 5px;
+        padding: 5px;
+      }
+
+      .add-button,
+      .update-button,
+      .delete-button {
+        padding: 5px 10px;
+        background-color: var(--primary);
+        color: var(--white);
+        border: none;
+        cursor: pointer;
+      }
+
+      .update-button,
+      .delete-button {
+        margin-right: 5px;
+      }
+
+      .add-button:hover,
+      .update-button:hover,
+      .delete-button:hover {
+        background-color: var(--hover);
+      }
+
+      @media (max-width: 1366px) {
+        html {
+          font-size: 75%;
+        }
+      }
+      @media (max-width: 758px) {
+        html {
+          font-size: 62.5%;
+        }
+      }
+      @media (max-width: 450px) {
+        html {
+          font-size: 55%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="Beranda.html">Home</a>
+      <a href="bahanBaku.html">Bahan Baku</a>
+      <a href="Resep.html">Resep</a>
+      <a href="Produksi.html">Produksi</a>
+      <a href="stok.html">Stok</a>
+      <a href="Penjualan.html">Penjualan</a>
+    </nav>
+
+    <!-- Konten Utama -->
+    <div class="bahanBaku">
+      <button class="add-button" onclick="showForm()">Tambah Data Baru</button>
+      <div class="form-container">
+        <input type="number" id="inputId" placeholder="ID Penjualan" />
+        <input type="number" id="inputId_Stok" placeholder="ID Stok" />
+        <input
+          type="text"
+          id="inputTanggal_Penjualan"
+          placeholder="Tanggal_Penjualan"
+        />
+        <input
+          type="number"
+          id="inputHarga_Satuan"
+          placeholder="Harga_Satuan"
+        />
+        <input type="number" id="inputJumlah" placeholder="Jumlah" />
+        <input type="number" id="inputTotal" placeholder="Total" />
+        <button class="add-button" onclick="addNewData()">Simpan</button>
+      </div>
+      <table id="data-table">
+        <tr>
+          <th>ID Penjualan</th>
+          <th>ID Stok</th>
+          <th>Tanggal_Penjualan</th>
+          <th>Harga_Satuan</th>
+          <th>Jumlah</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </table>
+    </div>
+  </body>
+  <script>
+    // Fungsi untuk menampilkan atau menyembunyikan form input
+    function showForm() {
+      const formContainer = document.querySelector(".form-container");
+      formContainer.style.display =
+        formContainer.style.display === "block" ? "none" : "block";
+    }
+
+    // Fungsi untuk menambahkan data ke tabel
+    function addNewData() {
+      const idPenjualan = document.getElementById("inputId").value;
+      const idStok = document.getElementById("inputId_Stok").value;
+      const tanggalPenjualan = document.getElementById(
+        "inputTanggal_Penjualan"
+      ).value;
+      const hargaSatuan = document.getElementById("inputHarga_Satuan").value;
+      const jumlah = document.getElementById("inputJumlah").value;
+      const total = document.getElementById("inputTotal").value;
+
+      // Pastikan semua input terisi
+      if (
+        idPenjualan &&
+        idStok &&
+        tanggalPenjualan &&
+        hargaSatuan &&
+        jumlah &&
+        total
+      ) {
+        // Menambahkan baris baru ke tabel
+        const table = document.getElementById("data-table");
+        const newRow = table.insertRow();
+
+        // Menambahkan data ke setiap kolom
+        newRow.innerHTML = `
+          <td>${idPenjualan}</td>
+          <td>${idStok}</td>
+          <td>${tanggalPenjualan}</td>
+          <td>${hargaSatuan}</td>
+          <td>${jumlah}</td>
+          <td>${total}</td>
+          <td><button class="delete-button" onclick="deleteRow(this)">Hapus</button></td>
+        `;
+
+        // Kosongkan form setelah menambahkan data
+        document.querySelector(".form-container").reset();
+        showForm(); // Menyembunyikan form setelah data ditambahkan
+      } else {
+        alert("Semua kolom harus diisi!");
+      }
+    }
+
+    // Fungsi untuk menghapus baris
+    function deleteRow(button) {
+      const row = button.closest("tr");
+      row.remove();
+    }
+  </script>
+</html>

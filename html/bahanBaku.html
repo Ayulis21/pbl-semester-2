@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bahan Baku</title>
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+      :root {
+        --primary: #c58940;
+        --hover: #a06633;
+        --white: #fff;
+        --bg: #faeab1;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        outline: none;
+        border: none;
+        text-decoration: none;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Ubuntu", sans-serif;
+        background-color: var(--bg);
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 1rem;
+        background: var(--primary);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 10;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar a {
+        color: var(--bg);
+        text-decoration: none;
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      .navbar a:hover {
+        background: var(--hover);
+        color: var(--white);
+        border-radius: 5px;
+      }
+
+      /* Atur margin konten agar tidak tertutup navbar */
+      .bahanBaku {
+        padding: 5rem 2rem 2rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+      }
+
+      th {
+        background-color: var(--primary);
+        color: var(--white);
+      }
+
+      .form-container {
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      input {
+        margin-right: 5px;
+        padding: 5px;
+      }
+
+      .add-button,
+      .update-button,
+      .delete-button {
+        padding: 5px 10px;
+        background-color: var(--primary);
+        color: var(--white);
+        border: none;
+        cursor: pointer;
+      }
+
+      .update-button,
+      .delete-button {
+        margin-right: 5px;
+      }
+
+      .add-button:hover,
+      .update-button:hover,
+      .delete-button:hover {
+        background-color: var(--hover);
+      }
+      @media (max-width: 1366px) {
+        html {
+          font-size: 75%;
+        }
+      }
+      @media (max-width: 758px) {
+        html {
+          font-size: 62.5%;
+        }
+      }
+      @media (max-width: 450px) {
+        html {
+          font-size: 55%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="Beranda.html">Home</a>
+      <a href="bahanBaku.html">Bahan Baku</a>
+      <a href="Resep.html">Resep</a>
+      <a href="Produksi.html">Produksi</a>
+      <a href="stok.html">Stok</a>
+      <a href="Penjualan.html">Penjualan</a>
+    </nav>
+
+    <!-- Konten Utama -->
+    <div class="bahanBaku">
+      <button class="add-button" onclick="showForm()">Tambah Data Baru</button>
+      <div class="form-container" id="form-container">
+        <input type="text" id="inputId" placeholder="ID Bahan Baku" />
+        <input type="text" id="inputBahan" placeholder="Nama Bahan" />
+        <input type="number" id="inputJumlah" placeholder="Jumlah" />
+        <input type="number" id="inputHarga" placeholder="Harga" />
+        <button class="add-button" onclick="addNewData()">Simpan</button>
+      </div>
+      <table id="data-table">
+        <thead>
+          <tr>
+            <th>ID Bahan Baku</th>
+            <th>Nama</th>
+            <th>Jumlah</th>
+            <th>Harga</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data Akan Diisi dengan JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Data Awal
+      let bahanBaku = [
+        { id: "1001", bahan: "Air", jumlah: 750, harga: 145000 },
+        { id: "1002", bahan: "Pengental", jumlah: 375, harga: 10000 },
+        { id: "1003", bahan: "Garam", jumlah: 750, harga: 45000 },
+      ];
+
+      // Fungsi untuk Render Tabel
+      function renderTable() {
+        const tableBody = document.querySelector("#data-table tbody");
+        tableBody.innerHTML = ""; // Bersihkan Tabel
+        bahanBaku.forEach((item, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+      <td>${item.id}</td>
+      <td>${item.bahan}</td>
+      <td>${item.jumlah}</td>
+      <td>${item.harga.toLocaleString()}</td>
+      <td>
+        <button class="update-button" onclick="showUpdateForm(${index})">Update</button>
+        <button class="delete-button" onclick="deleteData(${index})">Delete</button>
+      </td>
+    `;
+          tableBody.appendChild(row);
+        });
+      }
+
+      // Fungsi untuk Menampilkan Form Tambah
+      function showForm() {
+        document.getElementById("form-container").style.display = "block";
+        clearForm();
+      }
+
+      // Fungsi untuk Menambahkan Data Baru dengan Validasi
+      function addNewData() {
+        const id = document.getElementById("inputId").value;
+        const bahan = document.getElementById("inputBahan").value;
+        const jumlah = parseInt(document.getElementById("inputJumlah").value);
+        const harga = parseInt(document.getElementById("inputHarga").value);
+
+        // Validasi input
+        if (!id || !bahan || isNaN(jumlah) || isNaN(harga)) {
+          alert("Semua kolom harus diisi dengan benar!");
+          return; // Hentikan eksekusi jika ada input yang kosong atau tidak valid
+        }
+
+        bahanBaku.push({ id, bahan, jumlah, harga });
+        renderTable();
+        clearForm();
+        document.getElementById("form-container").style.display = "none"; // Sembunyikan form setelah data ditambahkan
+      }
+
+      // Fungsi untuk Menampilkan Form Update
+      function showUpdateForm(index) {
+        const data = bahanBaku[index];
+        document.getElementById("inputId").value = data.id;
+        document.getElementById("inputBahan").value = data.bahan;
+        document.getElementById("inputJumlah").value = data.jumlah;
+        document.getElementById("inputHarga").value = data.harga;
+
+        const saveButton = document.querySelector(".add-button");
+        saveButton.onclick = function () {
+          updateData(index);
+        };
+      }
+
+      // Fungsi untuk Update Data dengan Validasi
+      function updateData(index) {
+        const id = document.getElementById("inputId").value;
+        const bahan = document.getElementById("inputBahan").value;
+        const jumlah = parseInt(document.getElementById("inputJumlah").value);
+        const harga = parseInt(document.getElementById("inputHarga").value);
+
+        // Validasi input
+        if (!id || !bahan || isNaN(jumlah) || isNaN(harga)) {
+          alert("Semua kolom harus diisi dengan benar!");
+          return; // Hentikan eksekusi jika ada input yang kosong atau tidak valid
+        }
+
+        bahanBaku[index] = { id, bahan, jumlah, harga };
+        renderTable();
+        clearForm();
+        document.getElementById("form-container").style.display = "none"; // Sembunyikan form setelah update
+      }
+
+      // Fungsi untuk Menghapus Data
+      function deleteData(index) {
+        bahanBaku.splice(index, 1);
+        renderTable();
+      }
+
+      // Fungsi untuk Membersihkan Form
+      function clearForm() {
+        document.getElementById("inputId").value = "";
+        document.getElementById("inputBahan").value = "";
+        document.getElementById("inputJumlah").value = "";
+        document.getElementById("inputHarga").value = "";
+      }
+
+      // Render Tabel Awal
+      renderTable();
+    </script>
+  </body>
+</html>
